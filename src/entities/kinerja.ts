@@ -1,18 +1,7 @@
-import {Pekerjaan} from "./pekerjaan"
-
-interface Kinerja {
-    kinerjaId: number;
-    kinerjaUserId: number;
-    kinerjaStartUnixTime: number;
-    kinerjaEndUnixTime: number;
-    kinerjaPekerjaan: Pekerjaan;
-    kinerjaDescription?: string;
-}
-
 interface KinerjaRepository {
-    getKinerjaByKinerjaId: (id: number) => Kinerja;
-    getKinerjaByUserId: (UserId: number) => Kinerja;
-    setKinerja: (kinerja: Kinerja) => void; 
+    getKinerjaByKinerjaId(kinerjaId: number, cb: (err: Error,kinerja: object)=>void): void;
+    getKinerjaByUserId(userId: number, cb: (err: Error,kinerja: object)=>void): void;
+    setKinerja(kinerja: Object,cb: (err: Error)=>void): void; 
 }
 
-export {Kinerja,KinerjaRepository}
+export {KinerjaRepository}

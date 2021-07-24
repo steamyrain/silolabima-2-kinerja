@@ -1,11 +1,5 @@
-import {Sequelize, DataTypes} from "sequelize"
-interface Pekerjaan {
-    pekerjaanId: number;
-    pekerjaanName: string;
-}
-
 interface PekerjaanRepository {
-    getPekerjaanByPekerjaanId: (pekerjaanId: number) => Pekerjaan;
+    getPekerjaanByPekerjaanId(pekerjaanId: number, cb: (err: Error, pekerjaan: object)=>void): void;
 }
 
-export {Pekerjaan, PekerjaanRepository}
+export {PekerjaanRepository}

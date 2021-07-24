@@ -36,4 +36,4 @@ volumes:
 
 secrets:
     mariadb-secret:
-        file: ./.maria-env
+        file: ./.maria.env
