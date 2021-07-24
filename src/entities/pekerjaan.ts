@@ -1,3 +1,4 @@
+import {Sequelize, DataTypes} from "sequelize"
 interface Pekerjaan {
     pekerjaanId: number;
     pekerjaanName: string;
