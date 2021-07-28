@@ -1,59 +1,71 @@
 import express from "express"
 import cors from "cors"
 import morgan from "morgan"
-import dotenv from 'dotenv-safe'
-import {sequelize} from './infra/db/connection'
-import path from 'path'
+import { sequelize } from "./infra/db/connection"
+import KegiatanModel from './infra/db/models/kegiatanmodel'
+import KinerjaModel from './infra/db/models/kinerjamodel'
+import wrap from 'express-async-wrap'
 
-// envVar load environment variables
-// this is done synchronously because we don't want the application
-// start without all the needed environment variables
-try {
-    dotenv.config({
-        path:process.env.NODE_ENV==='production'?
-            path.join(__dirname,'../.prod.env'):path.join(__dirname,'../.dev.env')
-    }) 
-} catch(e){
-    console.log(e)
-    process.exit(1)
+/* ========================================================================================= */
+// initiates express application and registers middlewares to express application
+/* ========================================================================================= */
+const app = express() // instantiate express app
+app.use(cors())// app register cors middleware
+app.use(express.json())// app register express json middleware
+app.use(morgan('tiny'))// app register morgan tiny logger middleware
+/* ========================================================================================= */
+
+/* ================================================================================================= */
+// init application
+/* ================================================================================================= */
+const init = async () => {
+    /* ================================================================================================= */
+    // wait for database sync then we can start accepting request
+    /* ================================================================================================= */
+    try{
+        await sequelize.sync()
+    /* ================================================================================================= */
+    /* ================================================================================================= */
+    // registers route to express application
+    /* ================================================================================================= */
+        app.get('/',(_req,res)=>{// register "/" resource path with callback
+            res.status(200).send({message: "ok"})
+        })
+        app.get('/kegiatan',wrap(async(req,res,next)=>{// register "/kegiatan" resource path with callback
+            const kegiatan = await KegiatanModel.findAll({attributes:["kegiatanId","kegiatanName"]})
+            res.status(200).send(kegiatan)
+        }))
+        app.post('/kegiatan',wrap(async(req,res,next)=>{// register "/kegiatan" resource path with callback
+            const newKegiatan = await KegiatanModel.create({
+                pekerjaanId: parseInt(req.body.pekerjaanId),
+                organisasiId: parseInt(req.body.organisasiId),
+                kegiatanName: req.body.kegiatanName
+            })
+            res.status(201).send(newKegiatan)
+        }))
+        app.post('/kinerja',wrap(async(req,res,next)=>{// register "/kegiatan" resource path with callback
+            const newKinerja = await KinerjaModel.create({
+                userId: req.body.userId,
+                kinerjaStart: req.body.kinerjaStart,
+                kinerjaEnd: req.body.kinerjaEnd,
+                kegiatanId: req.body.kegiatanId,
+            })
+            res.status(201).send(newKinerja)
+        }))
+    /* ================================================================================================= */
+
+    /* ================================================================================================= */
+    // tell express application to start listening at designated port
+    /* ================================================================================================= */
+        app.listen(4000,()=>{
+            console.log("listening on port 4000")
+        })
+    /* ================================================================================================= */
+    } catch(e){// catch database sync errors 
+        console.error(e)// print the error to stdout
+    }
+    /* ================================================================================================= */
 }
-
-// check connections to database
-const db = async() => {
-    await sequelize.authenticate()
-    await sequelize.query("CREATE DATABASE IF NOT EXISTS `kinerja`")
-}
-// db() call the async function
-db()
-// on promise fulfilled
-.then((_val)=>{
-    console.log('successfully authenticated connection and created database')
-
-    // app instantiate express app
-    const app = express()
-
-    // app register cors middleware
-    app.use(cors())
-
-    // app register express json middleware
-    app.use(express.json())
-
-    // apap register morgan tiny logger middleware
-    app.use(morgan('tiny'))
-
-    // app register "/" path with callback
-    app.get('/',(_req,res)=>{
-        res.status(200).send({message: "ok"})
-    })
-
-    // app listen at port 4000
-    app.listen(4000,()=>{
-        console.log("listening on port 4000")
-    })
-})
-//on promise rejected
-.catch((reason)=>{
-    console.log(reason)
-    process.exit(1)
-})
+init()// start initialization
+/* ================================================================================================= */
 

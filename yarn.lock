@@ -61,7 +61,15 @@
   dependencies:
     dotenv "^8.2.0"
 
-"@types/express-serve-static-core@^4.17.18":
+"@types/express-async-wrap@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/express-async-wrap/-/express-async-wrap-1.0.0.tgz#8fc1193517eb9545894a2ece6ee1bd360ee64803"
+  integrity sha512-02p2fRYcL/1iUqCdtHGaLYwHXaIqx+/ysyh/lcPMwW3Edrn/gL9E1FYkyJjARVjOXpLCO/XoVZss54GxL5faAQ==
+  dependencies:
+    "@types/connect" "*"
+    "@types/express-serve-static-core" "*"
+
+"@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.18":
   version "4.17.24"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.24.tgz#ea41f93bf7e0d59cd5a76665068ed6aab6815c07"
   integrity sha512-3UJuW+Qxhzwjq3xhwXm2onQcFHn76frIYVbTu+kn24LFxI+dEhdfISDFovPB8VpEgW8oQCTpRuCe+0zJxB7NEA==
@@ -527,6 +535,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
+
+express-async-wrap@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-async-wrap/-/express-async-wrap-1.0.0.tgz#f9972d2b726fe68c0daf0495b8fc2137c54457aa"
+  integrity sha1-+ZctK3Jv5owNrwSVuPwhN8VEV6o=
 
 express@^4.17.1:
   version "4.17.1"
